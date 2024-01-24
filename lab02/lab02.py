@@ -30,7 +30,7 @@ def composite_identity(f, g):
     >>> b1(4)                            # (4 + 1) ** 2 != 4 ** 2 + 1
     False
     """
-    "*** YOUR CODE HERE ***"
+    return lambda x: f(g(x)) == g(f(x))
 
 
 def sum_digits(y):
@@ -74,8 +74,14 @@ def count_cond(condition):
     >>> count_primes(20)   # 2, 3, 5, 7, 11, 13, 17, 19
     8
     """
-    "*** YOUR CODE HERE ***"
+    return lambda N: sum(1 for i in range(1, N+1) if condition(N, i))
 
+
+def gcd(a, b):
+    """Return the greatest common divisor of a and b."""
+    while b != 0:
+        a, b = b, a % b
+    return a
 
 def multiple(a, b):
     """Return the smallest number n that is a multiple of both a and b.
@@ -85,7 +91,7 @@ def multiple(a, b):
     >>> multiple(14, 21)
     42
     """
-    "*** YOUR CODE HERE ***"
+    return a * b // gcd(a, b)
 
 
 
@@ -115,5 +121,16 @@ def cycle(f1, f2, f3):
     >>> do_two_cycles(1)
     19
     """
-    "*** YOUR CODE HERE ***"
-
+    def g(n):
+        def h(x):
+            result = x
+            for i in range(1, n + 1):
+                if i % 3 == 0:
+                    result = f3(result)
+                elif i % 3 == 1:
+                    result = f1(result)
+                else:
+                    result = f2(result)
+            return result
+        return h
+    return g
