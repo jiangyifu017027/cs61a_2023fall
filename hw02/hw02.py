@@ -31,7 +31,10 @@ def product(n, term):
     >>> product(3, triple)    # 1*3 * 2*3 * 3*3
     162
     """
-    "*** YOUR CODE HERE ***"
+    result = 1
+    for i in range(1, n+1):
+        result *= term(i)
+    return result
 
 
 def accumulate(merger, start, n, term):
@@ -58,7 +61,10 @@ def accumulate(merger, start, n, term):
     >>> accumulate(lambda x, y: (x + y) % 17, 19, 20, square)
     16
     """
-    "*** YOUR CODE HERE ***"
+    result = start
+    for i in range(1, n + 1):
+        result = merger(result, term(i))
+    return result
 
 
 def summation_using_accumulate(n, term):
@@ -75,7 +81,7 @@ def summation_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(summation_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    "*** YOUR CODE HERE ***"
+    return accumulate(add, 0, n, term)
 
 
 def product_using_accumulate(n, term):
@@ -92,7 +98,7 @@ def product_using_accumulate(n, term):
     >>> [type(x).__name__ for x in ast.parse(inspect.getsource(product_using_accumulate)).body[0].body]
     ['Expr', 'Return']
     """
-    "*** YOUR CODE HERE ***"
+    return accumulate(mul, 1, n, term)
 
 
 def funception(func1, begin):
@@ -121,7 +127,14 @@ def funception(func1, begin):
     >>> g3(-1)   # increment(-3) * increment(-2) = -2 * -1 = 2
     2
     """
-    "*** YOUR CODE HERE ***"
+    def func2(end):
+        result = 1
+        if begin >= end:
+            return result
+        for i in range(begin, end):
+            result *= func1(i)
+        return result
+    return func2
 
 
 def mul_by_num(num):
@@ -135,7 +148,7 @@ def mul_by_num(num):
     >>> y(-4)
     -8
     """
-    return ______
+    return lambda x : x * num
 
 
 def add_results(f1, f2):
@@ -158,7 +171,7 @@ def add_results(f1, f2):
     >>> a3(4)
     44
     """
-    return ______
+    return lambda x : f1(x) + f2(x)
 
 
 def mod_maker():
@@ -176,7 +189,7 @@ def mod_maker():
     >>> check(HW_SOURCE_FILE, 'mod_maker', ['If', 'IfExp']) # no if / if-else statements
     True
     """
-    return ______
+    return lambda x, y: (x % y) == 0 or (x % y)
 
 
 def lambda_math_syntax_check():
