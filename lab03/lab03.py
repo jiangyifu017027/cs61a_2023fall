@@ -28,7 +28,11 @@ def ordered_digits(x):
     False
 
     """
-    "*** YOUR CODE HERE ***"
+    digits = str(x)
+    for i in range(len(digits) - 1):
+        if digits[i] > digits[i + 1]:
+            return False
+    return True
 
 
 def get_k_run_starter(n, k):
@@ -50,14 +54,21 @@ def get_k_run_starter(n, k):
     >>> get_k_run_starter(1234234534564567, 2)
     2
     """
-    i = 0
+    n_str = str(n)
+    run_count = 0
     final = None
-    while ____________________________:
-        while ____________________________:
-            ____________________________
-        final = ____________________________
-        i = ____________________________
-        n = ____________________________
+    i = len(n_str) - 1
+
+    while run_count <= k:
+        while i > 0 and (int(n_str[i]) - int(n_str[i - 1])) == 1:
+            i -= 1
+        
+        if run_count == k:
+            final = int(n_str[i])
+        
+        run_count += 1
+        i -= 1
+
     return final
 
 
@@ -81,9 +92,22 @@ def nearest_two(x):
 
     """
     power_of_two = 1.0
-    "*** YOUR CODE HERE ***"
-    return power_of_two
 
+    if power_of_two < x:
+        while power_of_two < x:
+            power_of_two = power_of_two * 2
+    elif power_of_two >= x:
+        while power_of_two >= x:
+            power_of_two = power_of_two / 2
+        power_of_two = power_of_two * 2
+
+    diff1 = x - power_of_two
+    diff2 = x - power_of_two / 2
+
+    if abs(diff2) < abs(diff1):
+        power_of_two /= 2
+
+    return power_of_two
 
 def make_repeater(func, n):
     """Returns the function that computes the nth application of func.
@@ -100,7 +124,20 @@ def make_repeater(func, n):
     >>> make_repeater(square, 0)(5) # Yes, it makes sense to apply the function zero times!
     5
     """
-    "*** YOUR CODE HERE ***"
+    def f(x):
+        k = n
+        if k == 0:
+            return x
+        if k == 1:
+            return func(x)
+        func_new = func
+        while k > 1:
+            func_new = composer(func_new, func)
+            k = k - 1
+        return func_new(x)
+    
+    return f
+
 
 def composer(func1, func2):
     """Returns a function f, such that f(x) = func1(func2(x))."""
@@ -116,7 +153,11 @@ def apply_twice(func):
     >>> apply_twice(square)(2)
     16
     """
-    "*** YOUR CODE HERE ***"
+    def f(x):
+        func_new = composer(func, func)
+        return func_new(x)
+    
+    return f
 
 
 def div_by_primes_under(n):
@@ -131,12 +172,13 @@ def div_by_primes_under(n):
     False
     """
     checker = lambda x: False
-    i = ____________________________
-    while ____________________________:
+    i = 2
+    while i <= n:
         if not checker(i):
-            checker = ____________________________
-        i = ____________________________
-    return ____________________________
+            checker = (lambda f, i: lambda x: f(x) or (x % i == 0))(checker, i)
+        i += 1
+    return checker
+
 
 def div_by_primes_under_no_lambda(n):
     """
@@ -151,14 +193,16 @@ def div_by_primes_under_no_lambda(n):
     """
     def checker(x):
         return False
-    i = ____________________________
-    while ____________________________:
+
+    i = 2
+    while i <= n:
         if not checker(i):
-            def outer(____________________________):
-                def inner(____________________________):
-                    return ____________________________
-                return ____________________________
-            checker = ____________________________
-        i = ____________________________
-    return ____________________________
+            def outer(f, i=i):
+                def inner(x, i=i):
+                    return f(x) or (x % i == 0)
+                return inner
+            checker = outer(checker)
+        i += 1
+
+    return checker
 
